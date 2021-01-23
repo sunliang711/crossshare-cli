@@ -17,8 +17,8 @@ package cmd
 
 import (
 	"bytes"
-	"crossShareClient/types"
-	"crossShareClient/utils"
+	"crossshare-cli/types"
+	"crossshare-cli/utils"
 	"encoding/json"
 	"fmt"
 	"io"

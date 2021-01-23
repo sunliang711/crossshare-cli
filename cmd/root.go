@@ -26,15 +26,13 @@ import (
 )
 
 var (
-	buildstamp string
-	githash    string
 
 	cfgFile string
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "crossShareClient",
+	Use:   "crossshare-cli",
 	Short: "push text or file then pull it when needed",
 	Long: fmt.Sprintf(`Push text or file to remote server, when need it, pull it
 
@@ -84,7 +82,7 @@ func initConfig() {
 			os.Exit(1)
 		}
 
-		// Search config in home directory with name ".crossShareClient" (without extension).
+		// Search config in home directory with name ".crossshare-cli" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigName(".crossshare-cli")
 	}

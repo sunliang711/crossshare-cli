@@ -89,11 +89,13 @@ install(){
 
     _runAsRoot "mv ${this}/${exeName} ${dest}"
     cp .crossshare-cli.yaml ${home}
+    ${ed} ${home}/.crossshare-cli.yaml
 }
 
 _build(){
     cd "${this}"
-    flags="-X cmd.buildstamp=`date +%FT%T` -X cmd.githash=`git rev-parse HEAD` -w -s"
+    machine="$(uname -m)"
+    flags="-X crossshare-cli/cmd.buildstamp=`date +%FT%T` -X crossshare-cli/cmd.githash=`git rev-parse HEAD` -X crossshare-cli/cmd.machine=${machine} -w -s"
     echo "build ${exeName}..."
     go build -ldflags "$flags" -o ${exeName} "${this}/.."
 }

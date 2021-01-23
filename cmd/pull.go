@@ -16,8 +16,8 @@ limitations under the License.
 package cmd
 
 import (
-	"crossShareClient/types"
-	"crossShareClient/utils"
+	"crossshare-cli/types"
+	"crossshare-cli/utils"
 	"encoding/json"
 	"fmt"
 	"net/http"

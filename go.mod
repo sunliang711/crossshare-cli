@@ -1,4 +1,4 @@
-module crossShareClient
+module crossshare-cli
 
 go 1.13
 

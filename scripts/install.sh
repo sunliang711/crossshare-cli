@@ -82,6 +82,7 @@ fi
 ###############################################################################
 #
 exeName="crossshare-cli"
+configName=".crossshare-cli.yaml"
 
 install(){
     local dest="/usr/local/bin"
@@ -89,15 +90,34 @@ install(){
 
     _runAsRoot "mv ${this}/${exeName} ${dest}"
     cp .crossshare-cli.yaml ${home}
-    ${ed} ${home}/.crossshare-cli.yaml
+    echo "crossshare-cli config file: ${home}/${configName}"
 }
+
+machine="$(uname -m)"
+flags="-X crossshare-cli/cmd.buildstamp=`date +%FT%T` -X crossshare-cli/cmd.githash=`git rev-parse HEAD` -X crossshare-cli/cmd.machine=${machine} -w -s"
 
 _build(){
     cd "${this}"
-    machine="$(uname -m)"
-    flags="-X crossshare-cli/cmd.buildstamp=`date +%FT%T` -X crossshare-cli/cmd.githash=`git rev-parse HEAD` -X crossshare-cli/cmd.machine=${machine} -w -s"
     echo "build ${exeName}..."
     go build -ldflags "$flags" -o ${exeName} "${this}/.."
+}
+
+buildAll(){
+    _buildTar darwin amd64
+    _buildTar linux amd64
+}
+_buildTar(){
+    cd "${this}"
+    local os=${1:?'missing os'}
+    local arch=${2:?'missing arch'}
+    echo "Build for OS: ${os} Arch: ${arch}..."
+    GOOS=${os} GOARCH=${arch} go build -ldflags "${flags}" -o ${exeName} "${this}/.." || { echo "failed!"; exit 1; }
+    local dir="${os}-${arch}-crossshare-cli"
+    mkdir "${dir}"
+    mv ${exeName} ${dir}
+    cp ${configName} ${dir}
+    tar -jcvf "${dir}.tar.bz2" ${dir}
+    /bin/rm -rf ${dir}
 }
 
 em(){

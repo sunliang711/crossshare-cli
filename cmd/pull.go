@@ -16,10 +16,9 @@ limitations under the License.
 package cmd
 
 import (
-	"crossshare-cli/types"
 	"crossshare-cli/utils"
-	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -54,7 +53,7 @@ func init() {
 	// pullCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	pullCmd.Flags().StringP("output", "o", "", "output file")
 	// viper.BindPFlag("output", pullCmd.Flags().Lookup("output"))
-	pullCmd.Flags().BoolP("tcp", "t", false, "tcp")
+	// pullCmd.Flags().BoolP("tcp", "t", false, "tcp")
 }
 
 func pull(cmd *cobra.Command) {
@@ -84,29 +83,63 @@ func pull(cmd *cobra.Command) {
 	defer resp.Body.Close()
 	// io.Copy(os.Stdout, resp.Body)
 
-	var r types.Share
-	if err := json.NewDecoder(resp.Body).Decode(&r); err != nil {
-		utils.QuitMsg(fmt.Sprintf("Decode response error: %v\n", err))
-	}
-	if r.Code != types.OK {
-		utils.QuitMsg(fmt.Sprintf("Error: %s\n", r.Msg))
+	crossType := resp.Header.Get("Crossshare-Type")
+	if verbose {
+		logrus.Infof("Crossshare-Type: %v", crossType)
 	}
 
-	switch r.Type {
-	case types.TextType:
-		if len(outputFile) > 0 {
-			if f, err := os.OpenFile(outputFile, os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0600); err != nil {
-				utils.QuitMsg(fmt.Sprintf("Open file error: %v", err))
-			} else {
-				fmt.Fprintf(f, "%s", r.Content)
-			}
-		} else {
-			fmt.Fprintf(os.Stdout, "%s", r.Content)
-		}
-	case types.FileType:
-		utils.QuitMsg("FileType TODO\n")
-	default:
-		utils.QuitMsg("Invalid type\n")
+	if crossType == "error" {
+		utils.QuitMsg("crossshare type error")
 	}
+
+	bodyData, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		utils.QuitMsg(fmt.Sprintf("read reponse error: %v", err))
+	}
+	if len(outputFile) > 0 {
+		if verbose {
+			logrus.Infof("write to file: %v", outputFile)
+		}
+		ioutil.WriteFile(outputFile, bodyData, 0600)
+	} else {
+		switch crossType {
+		case "text":
+			fmt.Fprintf(os.Stdout, "%s", string(bodyData))
+		case "file":
+			filename := resp.Header.Get("Crossshare-Filename")
+			if filename == "" {
+				utils.QuitMsg("Remote server error: no Crossshare-Filename header")
+			}
+			if verbose {
+				logrus.Infof("write to oroginal file: %v", filename)
+			}
+			ioutil.WriteFile(filename, bodyData, 0600)
+		}
+	}
+
+	// var r types.Share
+	// if err := json.NewDecoder(resp.Body).Decode(&r); err != nil {
+	// 	utils.QuitMsg(fmt.Sprintf("Decode response error: %v\n", err))
+	// }
+	// if r.Code != types.OK {
+	// 	utils.QuitMsg(fmt.Sprintf("Error: %s\n", r.Msg))
+	// }
+
+	// switch r.Type {
+	// case types.TextType:
+	// 	if len(outputFile) > 0 {
+	// 		if f, err := os.OpenFile(outputFile, os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0600); err != nil {
+	// 			utils.QuitMsg(fmt.Sprintf("Open file error: %v", err))
+	// 		} else {
+	// 			fmt.Fprintf(f, "%s", r.Content)
+	// 		}
+	// 	} else {
+	// 		fmt.Fprintf(os.Stdout, "%s", r.Content)
+	// 	}
+	// case types.FileType:
+	// 	utils.QuitMsg("FileType TODO\n")
+	// default:
+	// 	utils.QuitMsg("Invalid type\n")
+	// }
 
 }

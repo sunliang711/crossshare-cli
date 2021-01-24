@@ -26,7 +26,6 @@ import (
 )
 
 var (
-
 	cfgFile string
 )
 
@@ -34,10 +33,7 @@ var (
 var rootCmd = &cobra.Command{
 	Use:   "crossshare-cli",
 	Short: "push text or file then pull it when needed",
-	Long: fmt.Sprintf(`Push text or file to remote server, when need it, pull it
-
-Build Time: %s
-Git Hash: %s`, buildstamp, githash),
+	Long:  `Push text or file to remote server, when need it, pull it`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },

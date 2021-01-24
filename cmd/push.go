@@ -17,11 +17,10 @@ package cmd
 
 import (
 	"bytes"
-	"crossshare-cli/types"
 	"crossshare-cli/utils"
-	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -32,7 +31,7 @@ import (
 
 var (
 	RemoteURL = "http://localhost:6020"
-	PUSH_TEXT = "/api/v1/push_text"
+	PUSH      = "/api/v1/push"
 	PULL      = "/api/v1/pull"
 )
 
@@ -73,45 +72,42 @@ func push(cmd *cobra.Command) {
 	if verbose {
 		logrus.Infof("Remote url: %s", RemoteURL)
 	}
+	var (
+		rd  io.Reader
+		err error
+	)
+
 	if len(inputFile) > 0 {
-		fmt.Fprintf(os.Stderr, "%s\n", "TODO")
-		os.Exit(1)
-	} else {
-		// read stdin
-		var result []byte
-		buf := make([]byte, 1024)
 		if verbose {
-			logrus.Infof("Read from stdin...\n")
+			logrus.Infof("read from file: %v", inputFile)
 		}
-		for {
-			n, err := os.Stdin.Read(buf)
-			if n > 0 {
-				result = append(result, buf[:n]...)
-			}
-			if err == io.EOF {
-				if verbose {
-					logrus.Infof("End\n")
-				}
-				break
-			} else if err != nil {
-				utils.QuitMsg(fmt.Sprintf("read stdin error: %v", err))
-			}
-		}
-
-		data := types.Share{Content: string(result)}
-		bs, err := json.Marshal(&data)
+		rd, err = os.Open(inputFile)
 		if err != nil {
-			utils.QuitMsg(fmt.Sprintf("Encode request body error: %v", err))
+			utils.QuitMsg(fmt.Sprintf("Open input file error: %v", err))
 		}
-
-		req, err := http.NewRequest("POST", RemoteURL+PUSH_TEXT, bytes.NewBuffer(bs))
-		req.Header.Set("Content-Type", "application/json")
-		client := &http.Client{}
-		resp, err := client.Do(req)
-		if err != nil {
-			utils.QuitMsg(fmt.Sprintf("POST error: %v", err))
+	} else {
+		if verbose {
+			logrus.Infof("read from stdin")
 		}
-		defer resp.Body.Close()
-		io.Copy(os.Stdout, resp.Body)
+		rd = os.Stdin
 	}
+	result, err := ioutil.ReadAll(rd)
+	if err != nil {
+		utils.QuitMsg(fmt.Sprintf("read input error: %v", err))
+	}
+
+	req, err := http.NewRequest("POST", RemoteURL+PUSH, bytes.NewBuffer(result))
+	if len(inputFile) > 0 {
+		if verbose {
+			logrus.Infof("set request header Filename: %v", inputFile)
+		}
+		req.Header.Set("Filename", inputFile)
+	}
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		utils.QuitMsg(fmt.Sprintf("POST error: %v", err))
+	}
+	defer resp.Body.Close()
+	io.Copy(os.Stdout, resp.Body)
 }

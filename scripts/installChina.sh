@@ -19,9 +19,15 @@ _runAsRoot(){
     fi
 }
 
-darwinLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597246/download/darwin-amd64-crossshare-cli.tar.bz2"
+# // v1.0
+# darwinLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597246/download/darwin-amd64-crossshare-cli.tar.bz2"
+# // v1.0
+# linuxLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597247/download/linux-amd64-crossshare-cli.tar.bz2"
 
-linuxLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597247/download/linux-amd64-crossshare-cli.tar.bz2"
+// v2.0
+darwinLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597537/download/darwin-amd64-crossshare-cli.tar.bz2"
+// v2.0
+linuxLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597538/download/linux-amd64-crossshare-cli.tar.bz2"
 
 configName=".crossshare-cli.yaml"
 exeName="crossshare-cli"

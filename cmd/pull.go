@@ -97,9 +97,7 @@ func pull(cmd *cobra.Command) {
 		utils.QuitMsg(fmt.Sprintf("read reponse error: %v", err))
 	}
 	if len(outputFile) > 0 {
-		if verbose {
-			logrus.Infof("write to file: %v", outputFile)
-		}
+		fmt.Fprintf(os.Stderr, "Write to file: %v", outputFile)
 		ioutil.WriteFile(outputFile, bodyData, 0600)
 	} else {
 		switch crossType {
@@ -110,9 +108,7 @@ func pull(cmd *cobra.Command) {
 			if filename == "" {
 				utils.QuitMsg("Remote server error: no Crossshare-Filename header")
 			}
-			if verbose {
-				logrus.Infof("write to oroginal file: %v", filename)
-			}
+			fmt.Fprintf(os.Stderr, "Write to original file: %v", filename)
 			ioutil.WriteFile(filename, bodyData, 0600)
 		}
 	}

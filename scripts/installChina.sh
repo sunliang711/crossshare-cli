@@ -19,22 +19,22 @@ _runAsRoot(){
     fi
 }
 
-# // v1.0
+# ## v1.0
 # darwinLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597246/download/darwin-amd64-crossshare-cli.tar.bz2"
-# // v1.0
+# ## v1.0
 # linuxLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597247/download/linux-amd64-crossshare-cli.tar.bz2"
 
-# // v2.0
+# ## v2.0
 # darwinLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597537/download/darwin-amd64-crossshare-cli.tar.bz2"
-# // v2.0
+# ## v2.0
 # linuxLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597538/download/linux-amd64-crossshare-cli.tar.bz2"
 
-// v2.0.1
-darwinLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597543/download/darwin-amd64-crossshare-cli.tar.bz2"
-// v2.0.1
-linuxLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597542/download/linux-amd64-crossshare-cli.tar.bz2"
+# ## v2.0.1
+# darwinLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597543/download/darwin-amd64-crossshare-cli.tar.bz2"
+# ## v2.0.1
+# linuxLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597542/download/linux-amd64-crossshare-cli.tar.bz2"
 
-// v2.0.2
+## v2.0.2
 darwinLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597901/download/darwin-amd64-crossshare-cli.tar.bz2"
 linuxLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597902/download/linux-amd64-crossshare-cli.tar.bz2"
 

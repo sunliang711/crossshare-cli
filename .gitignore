@@ -4,3 +4,5 @@
 .DS_Store
 *.swp
 .idea/
+darwin-amd64-crossshare-cli.tar.bz2
+linux-amd64-crossshare-cli.tar.bz2

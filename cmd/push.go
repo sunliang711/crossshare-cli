@@ -60,6 +60,7 @@ func init() {
 	// is called directly, e.g.:
 	// pushCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	pushCmd.Flags().StringP("input", "i", "", "input file")
+	// TODO ttl flag to specify ttl (works only less than server ttl)
 	// viper.BindPFlag("input", pushCmd.Flags().Lookup("input"))
 }
 

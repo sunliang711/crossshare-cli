@@ -52,6 +52,7 @@ func init() {
 	// is called directly, e.g.:
 	// pullCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	pullCmd.Flags().StringP("output", "o", "", "output file")
+	pullCmd.Flags().BoolP("delete", "d", false, "delete after pull")
 	// viper.BindPFlag("output", pullCmd.Flags().Lookup("output"))
 	// pullCmd.Flags().BoolP("tcp", "t", false, "tcp")
 }
@@ -76,9 +77,21 @@ func pull(cmd *cobra.Command) {
 		logrus.Infof("Remote url: %s", RemoteURL)
 	}
 
-	resp, err := http.Get(fmt.Sprintf("%s%s/%s", RemoteURL, PULL, key))
+	fullPath := fmt.Sprintf("%s%s/%s", RemoteURL, PULL, key)
+	req, err := http.NewRequest("GET", fullPath, nil)
 	if err != nil {
-		panic(err)
+		utils.QuitMsg(fmt.Sprintf("New request error: %v", err))
+	}
+	delete := cmd.Flag("delete").Value.String()
+	if delete == "true" {
+		req.Header.Add("Delete-After-Pull", "true")
+	}
+
+	cli := http.Client{}
+	resp, err := cli.Do(req)
+	// resp, err := http.Get(fmt.Sprintf("%s%s/%s", RemoteURL, PULL, key))
+	if err != nil {
+		utils.QuitMsg(fmt.Sprintf("Get response error: %v", err))
 	}
 	defer resp.Body.Close()
 	// io.Copy(os.Stdout, resp.Body)
@@ -101,15 +114,17 @@ func pull(cmd *cobra.Command) {
 		ioutil.WriteFile(outputFile, bodyData, 0600)
 	} else {
 		switch crossType {
-		case "text":
+		case "Text":
 			fmt.Fprintf(os.Stdout, "%s", string(bodyData))
-		case "file":
+		case "File":
 			filename := resp.Header.Get("Crossshare-Filename")
 			if filename == "" {
 				utils.QuitMsg("Remote server error: no Crossshare-Filename header")
 			}
 			fmt.Fprintf(os.Stderr, "Write to original file: %v", filename)
 			ioutil.WriteFile(filename, bodyData, 0600)
+		case "NotFound":
+			// output nothing
 		}
 	}
 

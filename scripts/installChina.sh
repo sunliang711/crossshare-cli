@@ -59,7 +59,7 @@ install(){
     cd "${tmpDir}"
 
     echo "Download ..."
-    wget ${link} || { echo "Download failed!"; exit 1; }
+    curl -LO ${link} || { echo "Download failed!"; exit 1; }
     tarFileName=${link##*/}
     dirName=${tarFileName%.tar.bz2}
     echo "tarFileName: ${tarFileName}"

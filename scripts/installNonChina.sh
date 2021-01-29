@@ -19,9 +19,13 @@ _runAsRoot(){
     fi
 }
 
+# v1.0
 darwinLink="https://github.com/sunliang711/crossshare-cli/releases/download/v1.0/darwin-amd64-crossshare-cli.tar.bz2"
-
 linuxLink="https://github.com/sunliang711/crossshare-cli/releases/download/v1.0/linux-amd64-crossshare-cli.tar.bz2"
+
+# v2.0.3
+darwinLink="https://github.com/sunliang711/crossshare-cli/releases/download/v2.0.3/darwin-amd64-crossshare-cli.tar.bz2"
+linuxLink="https://github.com/sunliang711/crossshare-cli/releases/download/v2.0.3/linux-amd64-crossshare-cli.tar.bz2"
 
 configName=".crossshare-cli.yaml"
 exeName="crossshare-cli"

@@ -91,6 +91,7 @@ func push(cmd *cobra.Command) {
 			logrus.Infof("read from stdin")
 		}
 		rd = os.Stdin
+		fmt.Fprintf(os.Stderr, "> ")
 	}
 	result, err := ioutil.ReadAll(rd)
 	if err != nil {

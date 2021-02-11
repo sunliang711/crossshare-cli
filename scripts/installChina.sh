@@ -42,6 +42,8 @@ _runAsRoot(){
 darwinLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/598000/download/darwin-amd64-crossshare-cli.tar.bz2"
 linuxLink="https://gitee.com/sunliang711/crossshare-cli/attach_files/597999/download/linux-amd64-crossshare-cli.tar.bz2"
 
+linuxArm64Link="https://gitee.com/sunliang711/crossshare-cli/attach_files/612986/download/linux-arm64-crossshare-cli.tar.bz2"
+
 configName=".crossshare-cli.yaml"
 exeName="crossshare-cli"
 
@@ -58,6 +60,10 @@ install(){
             exit 1
         ;;
     esac
+
+    if [ $(uname -m) = aarch64 ];then
+        link=${linuxArm64Link}
+    fi
 
     local tmpDir=/tmp/crossshare-cli-tmp-install
     if [ -d "${tmpDir}" ];then

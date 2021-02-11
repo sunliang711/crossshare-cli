@@ -98,14 +98,21 @@ flags="-X crossshare-cli/cmd.buildstamp=`date +%FT%T` -X crossshare-cli/cmd.gith
 
 _build(){
     cd "${this}"
+    local os=${1:?'missing os'}
+    local arch=${2:?'missing arch'}
     echo "build ${exeName}..."
-    go build -ldflags "$flags" -o ${exeName} "${this}/.."
+    GOOS=${os} GOARCH=${arch} go build -ldflags "$flags" -o ${exeName} "${this}/.."
 }
 
 buildAll(){
+    echo "build darwin amd64..."
     _buildTar darwin amd64
+    echo "build linux amd64..."
     _buildTar linux amd64
+    echo "build linux arm64..."
+    _buildTar linux arm64
 }
+
 _buildTar(){
     cd "${this}"
     local os=${1:?'missing os'}
@@ -116,6 +123,7 @@ _buildTar(){
     mkdir "${dir}"
     mv ${exeName} ${dir}
     cp ${configName} ${dir}
+    echo "Create tar file..."
     tar -jcvf "${dir}.tar.bz2" ${dir}
     /bin/rm -rf ${dir}
 }
@@ -128,6 +136,7 @@ em(){
 # write your code above
 ###############################################################################
 function _help(){
+    cd ${this}
     cat<<EOF2
 Usage: $(basename $0) ${bold}CMD${reset}
 

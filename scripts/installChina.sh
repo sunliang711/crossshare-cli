@@ -81,7 +81,12 @@ install(){
     tar -jxvf ${tarFileName}
 
     cp ${dirName}/${configName} $HOME
-    _runAsRoot "cp ${dirName}/${exeName} /usr/local/bin" || { echo "Install failed!"; exit 1; }
+
+    local dest=/usr/local/bin
+    if [ ! -d "${dest}" ];then
+        _runAsRoot "mkdir -p ${dest}"
+    fi
+    _runAsRoot "cp ${dirName}/${exeName} ${dest}" || { echo "Install failed!"; exit 1; }
 
     /bin/rm -rf "${tmpDir}"
 

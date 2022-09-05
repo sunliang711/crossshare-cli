@@ -87,6 +87,10 @@ install(){
         _runAsRoot "mkdir -p ${dest}"
     fi
     _runAsRoot "cp ${dirName}/${exeName} ${dest}" || { echo "Install failed!"; exit 1; }
+    local aliasName=share
+    (
+        cd ${dest} && _runAsRoot "ln -sf ${exeName} ${aliasName}"
+    )
 
     /bin/rm -rf "${tmpDir}"
 
